@@ -11,10 +11,15 @@
 			$(document).ready( function() {
 
 				$('#fileTreeDemo_1').fileTree({ root: '{{request.session.browse_dir}}'}, function(file) {
-					alert(file);
+					openFile(file);
 				});
 
 			});
+			function openFile(filepath){
+				$.post('/filecontent/', { filepath: filepath }, function(data) {
+					$("#id_code").val(data);
+				})
+			}
 		</script>
 </head>
 <body>
@@ -23,5 +28,9 @@
 	{% endfor %}
 
 	<div id="fileTreeDemo_1" class="demo"></div>
+	<form action="/setcontent/" method="post"/> {% csrf_token %}
+		<div>{{editor}}</div>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Save Changes"/>
+	</form>
 </body>
 </html>

@@ -2,7 +2,7 @@ import os
 import urllib
 
 from django.shortcuts import render
-from core.forms import UploadApkForm
+from core.forms import UploadApkForm, EditorForm
 from core.utils import extract_file
 from django.contrib import messages
 from django.conf import settings
@@ -36,7 +36,7 @@ def details(request):
         return HttpResponseRedirect('/')
     response = extract_file(UploadApk.objects.get(id=request.session['apkid']))
     request.session['browse_dir'] = response['output_dir']
-    return render_to_response('details.html', {'response':response}, context_instance=RequestContext(request))
+    return render_to_response('details.html', {'response':response, 'editor':EditorForm}, context_instance=RequestContext(request))
 
 @csrf_exempt
 def dirlist(request):
@@ -57,3 +57,24 @@ def dirlist(request):
        r.append('Could not load directory: %s' % str(e))
    r.append('</ul>')
    return HttpResponse(''.join(r))
+
+@csrf_exempt
+def filecontent(request):
+    filepath = request.POST['filepath']
+    request.session['current_file'] = filepath
+    open_file = open(filepath)
+    content = open_file.read()
+    print content
+    open_file.close()
+    return HttpResponse(content)
+
+def setcontent(request):
+    if request.method=='POST':
+        code = request.POST['code']
+        filepath = request.session['current_file']
+        open_file = open(filepath, 'w')
+        open_file.write(code)
+        open_file.close()
+        return HttpResponseRedirect('/details/')
+    else:
+        return HttpResponseRedirect('/details/')
