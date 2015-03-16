@@ -1,2 +1,0 @@
-# attify
-Android apk parser
