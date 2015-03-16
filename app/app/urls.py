@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'android.views.home', name='home'),
     url(r'^details/$', 'android.views.details', name='details'),
+    url(r'^dirstructure/$', 'android.views.dirlist', name='dirlist'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
